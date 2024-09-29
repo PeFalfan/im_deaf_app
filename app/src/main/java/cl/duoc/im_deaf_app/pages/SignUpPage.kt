@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -21,8 +24,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -40,6 +47,29 @@ fun SignUpPage(modifier: Modifier = Modifier, navController: NavController, auth
     var password by remember {
         mutableStateOf("")
     }
+
+    var validatePassword by remember {
+        mutableStateOf("")
+    }
+
+    var passwordVisibility by remember {
+        mutableStateOf(false)
+    }
+
+    var validatePasswordVisibility by remember {
+        mutableStateOf(false)
+    }
+
+    val icon = if (passwordVisibility)
+        painterResource(id = R.drawable.ic_visibility)
+    else
+        painterResource(id = R.drawable.ic_visibility_off)
+
+    val icon2 = if (validatePasswordVisibility)
+        painterResource(id = R.drawable.ic_visibility)
+    else
+        painterResource(id = R.drawable.ic_visibility_off)
+
 
     // CONTEXT AND NAVIGATION VARIABLES
     val authState = authViewModel.authState.observeAsState()
@@ -73,6 +103,7 @@ fun SignUpPage(modifier: Modifier = Modifier, navController: NavController, auth
 
         OutlinedTextField(
             value = email,
+            singleLine = true,
             onValueChange = {
                 email = it
             },
@@ -85,29 +116,84 @@ fun SignUpPage(modifier: Modifier = Modifier, navController: NavController, auth
 
         OutlinedTextField(
             value = password,
+            singleLine = true,
             onValueChange = {
                 password = it
             },
+
+            trailingIcon = {
+                IconButton(onClick = {
+                    passwordVisibility = !passwordVisibility
+                }) {
+                    Icon(
+                        painter = icon,
+                        contentDescription = "Visibility Icon",
+                        tint = Color.White,
+                        modifier = Modifier.height(40.dp)
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password
+            ),
+            visualTransformation = if (passwordVisibility) VisualTransformation.None
+            else PasswordVisualTransformation(),
             label = {
                 Text(text = "Contraseña")
+            },
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+            value = validatePassword,
+            singleLine = true,
+            onValueChange = {
+                validatePassword = it
+            },
+
+            trailingIcon = {
+                IconButton(onClick = {
+                    validatePasswordVisibility = !validatePasswordVisibility
+                }) {
+                    Icon(
+                        painter = icon2,
+                        contentDescription = "Visibility Icon",
+                        tint = Color.White,
+                        modifier = Modifier.height(40.dp)
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password
+            ),
+            visualTransformation = if (validatePasswordVisibility) VisualTransformation.None
+            else PasswordVisualTransformation(),
+            label = {
+                Text(text = "Repetir contraseña")
             },
         )
         Spacer(modifier = Modifier.height(50.dp))
 
         Button(onClick = {
-            println("login")
-            authViewModel.signUp(email, password)
-        }) {
+
+            if (password.equals(validatePassword)) {
+                authViewModel.signUp(email, password)
+            } else {
+                Toast.makeText(context, "CONTRASEñAS DEBEN SER IGUALES!!", Toast.LENGTH_SHORT).show()
+            }
+        },
+            enabled = authState.value != AuthState.Loading)
+        {
             Text(
                 text = "Registrarme",
                 fontSize = 25.sp,
             )
         }
 
+
+
         Spacer(modifier = Modifier.height(25.dp))
 
         TextButton(onClick = {
-            println("Login")
             navController.navigate("login")
         }) {
             Text(

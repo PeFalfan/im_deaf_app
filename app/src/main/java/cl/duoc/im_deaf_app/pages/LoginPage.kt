@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -21,8 +24,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -40,6 +47,10 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authV
 
     var password by remember {
         mutableStateOf("")
+    }
+
+    var passwordVisibility by remember {
+        mutableStateOf(false)
     }
 
     // CONTEXT AND NAVIGATION VARIABLES
@@ -73,6 +84,7 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authV
         
         OutlinedTextField(
             value = email,
+            singleLine = true,
             onValueChange = {
                 email = it
             },
@@ -83,11 +95,38 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authV
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        val icon = if (passwordVisibility)
+            painterResource(id = R.drawable.ic_visibility)
+        else
+            painterResource(id = R.drawable.ic_visibility_off)
+
+
         OutlinedTextField(
             value = password,
+
             onValueChange = {
                 password = it
             },
+
+            singleLine = true,
+
+            trailingIcon = {
+                IconButton(onClick = {
+                    passwordVisibility = !passwordVisibility
+                }) {
+                    Icon(
+                        painter = icon,
+                        contentDescription = "Visibility Icon",
+                        tint = Color.White,
+                        modifier = Modifier.height(40.dp)
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password
+            ),
+            visualTransformation = if (passwordVisibility) VisualTransformation.None
+            else PasswordVisualTransformation(),
             label = {
                 Text(text = "Contraseña")
             },
@@ -96,7 +135,9 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authV
 
         Button(onClick = {
             authViewModel.login(email, password)
-        }) {
+        },
+            enabled = authState.value != AuthState.Loading
+        ) {
             Text(
                 text = "Ingresar",
                 fontSize = 25.sp,
@@ -105,7 +146,9 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authV
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        TextButton(onClick = { println("recover password") }) {
+        TextButton(onClick = {
+            Toast.makeText(context, "FUNCIONALIDAD EN CAMINO!", Toast.LENGTH_SHORT).show()
+        }) {
             Text(
                 text = "Olvidaste tu contraseña?",
                 fontSize = 20.sp
