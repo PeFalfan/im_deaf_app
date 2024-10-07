@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1025812399095",
+    "firebase_url": "https://im-deaf-app-default-rtdb.firebaseio.com",
     "project_id": "im-deaf-app",
     "storage_bucket": "im-deaf-app.appspot.com"
   },

@@ -69,5 +69,19 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+//    implementation(libs.firebase.realtime)
+
+//    implementation (libs.firebase.database)
+
+//    implementation (platform(libs.firebase.bom))
+//
+//    implementation(libs.firebase.crashlytics)
+//    implementation(libs.firebase.analytics.ktx)
+//    implementation(libs.firebase.crashlytics.ktx)
+//    implementation(libs.google.firebase.analytics.ktx)
+
+//    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+
+
+
 }

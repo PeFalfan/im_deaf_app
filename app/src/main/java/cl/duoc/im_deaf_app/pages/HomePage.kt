@@ -36,8 +36,6 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePage(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel) {
-
-
     // alarm manager instance
     val alarmManager = AppAlarmManager(context = LocalContext.current)
 
